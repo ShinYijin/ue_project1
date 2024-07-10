@@ -33,6 +33,11 @@ private:
 	UPROPERTY(VisibleAnywhere) // "이 프로퍼티는 언리얼에서 자동으로 관리하는 메모리다" 라는 의미. -> 이게 붙으면 그냥 new로 생성못하고 CreateDefaultSubObject라는 함수를 이용해서 객체 생성해야함. 
 		// VisibleAnywhere는 어디에서도 수정할 수 있도록 보여지게하는 것. UE에서 프로퍼티 내부 멤버 수정을 할 수 있게 하는 것 같음. 유니티 SerializeField같음. 
 	UStaticMeshComponent* Mesh;
-	
+	UPROPERTY(EditAnywhere, Category=BattleStat) // 이건 visible만해서는 ue에서 바로 수정은 안됨. editanywhere로 해야함
+	int32 Hp;
+	UPROPERTY(EditAnywhere, Category = BattleStat)
+	int32 Mp;
+	UPROPERTY(EditAnywhere, Category = BattleStat)
+	float RotateSpeed = 30.f;
 
 };
