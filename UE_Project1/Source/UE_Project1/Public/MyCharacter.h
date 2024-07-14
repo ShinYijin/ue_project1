@@ -32,11 +32,24 @@ private:
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
+	UPROPERTY()
+	class UMyAnimInstance* AnimInstance;
 
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Pawn")
+	bool IsAttacking = false;
 
 public:
+	// bind axis function
 	void UpDown(float Value);
 	void LeftRight(float Value);
 	void Yaw(float Value);
+
+	// bind action function
 	void Attack();
+
+	// delegate functions
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
 };

@@ -46,7 +46,9 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
+	// 애니메이션 몽타주 관련 delegate 붙이기
+	AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::OnAttackMontageEnded); // OnMontageEnded()이게 AnimInstance에 구현되어있는 델리게이트 타입임. 
 }
 
 // Called every frame
@@ -95,7 +97,16 @@ void AMyCharacter::Yaw(float Value)
 
 void AMyCharacter::Attack()
 {
-	// animtion attack 몽타주를 플레이. (anim instance를 찾아서 거기있는 play함수 실행하기)
-	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	if (IsAttacking)
+		return;
+
+	// animtion attack 몽타주를 플레이. (anim instance를 찾아서 거기있는 play함수 실행하기)	
 	AnimInstance->PlayAttackMontage();
+
+	IsAttacking = true;
+}
+
+void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	IsAttacking = false;
 }
