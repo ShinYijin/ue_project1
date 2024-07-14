@@ -17,7 +17,7 @@ AMyPawn::AMyPawn()
 
 	Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MOVEMENT")); // 이거 이름은 헤쉬값같은것. 겹치지 않게해야함. 
 
-// 2. 리소스 로드해서 아예 이 클래스에 박아버리는 실습 
+	// 2. 리소스 로드해서 아예 이 클래스에 박아버리는 실습 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Props/SM_Chair.SM_Chair'"/*메쉬 리소스 경로*/));
 
 	if (SM.Succeeded())
