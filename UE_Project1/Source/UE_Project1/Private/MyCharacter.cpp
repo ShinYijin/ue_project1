@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"// GetCapsuleComponent()를 사용하기 위함. 
 										// 이걸 안쓰면 아마 CapsuleComponent라는 타입을 잘 몰라서 자동 형변환이 안되는 듯. 그래서 SpringArm->SetupAttachment(GetCapsuleComponent()); 에서 오류남. 
+#include "MyAnimInstance.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -67,6 +68,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	
 	// 액션 바인드 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::Jump); // Jump는 ACharacter에서 제공함. 
+	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AMyCharacter::Attack); 
 }
 
 void AMyCharacter::UpDown(float Value)
@@ -89,4 +91,11 @@ void AMyCharacter::LeftRight(float Value)
 void AMyCharacter::Yaw(float Value)
 {
 	AddControllerYawInput(Value);
+}
+
+void AMyCharacter::Attack()
+{
+	// animtion attack 몽타주를 플레이. (anim instance를 찾아서 거기있는 play함수 실행하기)
+	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInstance->PlayAttackMontage();
 }

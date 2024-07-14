@@ -15,12 +15,21 @@ class UE_PROJECT1_API UMyAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 // TODO
+public:
+	UMyAnimInstance();
+
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	
+public:
+	void PlayAttackMontage();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta=(AllowPrivateAccess=true))
 	float Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	bool IsFalling;
 
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
+	UAnimMontage* AttackMontage;	// 생성자에서 세팅함. 
 };
