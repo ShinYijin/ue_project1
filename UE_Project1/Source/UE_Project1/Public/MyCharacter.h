@@ -27,6 +27,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 // TODO
+public:
+	// Blend Space
+	UPROPERTY(VisibleAnywhere)
+	float UpDownValue = 0;
+	UPROPERTY(VisibleAnywhere)
+	float LeftRightValue = 0;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* SpringArm;
@@ -35,9 +42,14 @@ private:
 	UPROPERTY()
 	class UMyAnimInstance* AnimInstance;
 
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn")
 	bool IsAttacking = false;
+
+	// 애니메이션 섹션 실습
+	UPROPERTY()
+	int32 AttackIndex = 0;
 
 public:
 	// bind axis function

@@ -6,6 +6,7 @@
 // TODO
 #include "GameFramework/Character.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "MyCharacter.h"
 
 UMyAnimInstance::UMyAnimInstance()
 {
@@ -33,10 +34,14 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Speed = Pawn->GetVelocity().Size();	
 
 		
-		auto Character = Cast<ACharacter>(Pawn);
+		auto Character = Cast<AMyCharacter>(Pawn);
 		if (Character)
 		{	// isFalling 정도는 언리얼에서 제공함. 
 			IsFalling = Character->GetMovementComponent()->IsFalling();
+
+			// Blend Space 
+			Vertical = Character->UpDownValue;
+			Horizontal = Character->LeftRightValue;
 		}
 	}
 }
@@ -47,4 +52,20 @@ void UMyAnimInstance::PlayAttackMontage()
 	{
 		Montage_Play(AttackMontage, 1.f);	
 	}
+}
+
+FName UMyAnimInstance::GetAttackMontageName(int32 SectionIndex)
+{
+	return FName(*FString::Printf(TEXT("Attack%d"), SectionIndex));
+}
+
+void UMyAnimInstance::JumpToSection(int32 SectionIndex)
+{
+	FName Name = GetAttackMontageName(SectionIndex);
+	Montage_JumpToSection(Name, AttackMontage);
+}
+
+void UMyAnimInstance::AnimNotify_AttackHit()
+{
+	UE_LOG(LogTemp, Warning, TEXT("NOTIFY_AttackHit"));
 }

@@ -77,8 +77,9 @@ void AMyCharacter::UpDown(float Value)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("UpDown %f"), Value);
 
-	if (Value == 0.f) return;
+	//if (Value == 0.f) return;
 
+	UpDownValue = Value; // for blend space 
 	AddMovementInput(GetActorForwardVector(), Value);
 }
 
@@ -86,7 +87,9 @@ void AMyCharacter::LeftRight(float Value)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("LeftRight %f"), Value);
 
-	if (Value == 0.f) return;
+	//if (Value == 0.f) return;
+
+	LeftRightValue = Value; // for blend space 
 	AddMovementInput(GetActorRightVector(), Value);
 }
 
@@ -102,6 +105,10 @@ void AMyCharacter::Attack()
 
 	// animtion attack 몽타주를 플레이. (anim instance를 찾아서 거기있는 play함수 실행하기)	
 	AnimInstance->PlayAttackMontage();
+
+	// 에니메이션 섹션 실행
+	AnimInstance->JumpToSection(AttackIndex);
+	AttackIndex = (AttackIndex + 1) % 3;
 
 	IsAttacking = true;
 }
