@@ -6,6 +6,10 @@
 #include "Animation/AnimInstance.h"
 #include "MyAnimInstance.generated.h"
 
+// Delegate declear
+DECLARE_MULTICAST_DELEGATE(FOnAttackHit); 
+
+
 UCLASS()
 class UE_PROJECT1_API UMyAnimInstance : public UAnimInstance
 {
@@ -44,4 +48,8 @@ private:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pawn", Meta = (AllowPrivateAccess = true))
 	UAnimMontage* AttackMontage;	// 생성자에서 세팅함. 
+
+public: 
+	// collition
+	FOnAttackHit OnAttackHit;
 };

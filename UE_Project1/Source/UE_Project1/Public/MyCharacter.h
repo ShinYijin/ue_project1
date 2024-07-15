@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
+
 UCLASS()
 class UE_PROJECT1_API AMyCharacter : public ACharacter
 {
@@ -18,6 +19,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 public:	
 	// Called every frame
@@ -59,6 +61,9 @@ public:
 
 	// bind action function
 	void Attack();
+
+	// bind delegate function (for collition)
+	void AttackCheck();
 
 	// delegate functions
 	UFUNCTION()

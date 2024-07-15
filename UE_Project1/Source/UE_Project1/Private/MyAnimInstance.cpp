@@ -67,5 +67,6 @@ void UMyAnimInstance::JumpToSection(int32 SectionIndex)
 
 void UMyAnimInstance::AnimNotify_AttackHit()
 {
-	UE_LOG(LogTemp, Warning, TEXT("NOTIFY_AttackHit"));
+	//UE_LOG(LogTemp, Warning, TEXT("NOTIFY_AttackHit"));
+	OnAttackHit.Broadcast();
 }
