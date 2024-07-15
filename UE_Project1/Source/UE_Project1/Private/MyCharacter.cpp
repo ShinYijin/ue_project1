@@ -66,14 +66,14 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// 엑터 클래스로 관리되는 무기를 스폰해서 장착하는 경우 
-	FName WeaponSocket(TEXT("hand_l_socket"));
+	/*FName WeaponSocket(TEXT("hand_l_socket"));
 	auto CurrentWeapon = GetWorld()->SpawnActor<AMyWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
 	if (CurrentWeapon)
 	{	// 소켓에 엑터 붙이기 
 		CurrentWeapon->AttachToComponent(GetMesh(),
 			FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 			WeaponSocket);
-	}
+	}*/
 }
 
 void AMyCharacter::PostInitializeComponents()
