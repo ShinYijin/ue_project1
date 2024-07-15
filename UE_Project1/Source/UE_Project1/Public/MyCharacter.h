@@ -43,7 +43,10 @@ private:
 	class UCameraComponent* Camera;
 	UPROPERTY()
 	class UMyAnimInstance* AnimInstance;
-
+	
+	// Stat Component로 데이터 관리 
+	UPROPERTY(VisibleAnywhere)
+	class UMyStatComponent* Stat;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn")
@@ -73,4 +76,7 @@ public:
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
+	// 데미지 처리를 위해 Actor의 가상함수를 오버라이드 해서 데미지 발생시 어떤 동작을 할지 정해주기 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+		AController* EventInstigator, AActor* DamageCauser) override;
 };

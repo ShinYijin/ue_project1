@@ -9,8 +9,11 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"// GetCapsuleComponent()를 사용하기 위함. 
 										// 이걸 안쓰면 아마 CapsuleComponent라는 타입을 잘 몰라서 자동 형변환이 안되는 듯. 그래서 SpringArm->SetupAttachment(GetCapsuleComponent()); 에서 오류남. 
+#include "Engine/DamageEvents.h"
+
 #include "MyAnimInstance.h"
 #include "MyWeapon.h"
+#include "MyStatComponent.h"
 
 #include "DrawDebugHelpers.h" // 디버깅하기 편하게 도와주는 라이브러리 
 
@@ -30,6 +33,7 @@ AMyCharacter::AMyCharacter()
 	// [Component setting]
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
+	Stat = CreateDefaultSubobject<UMyStatComponent>(TEXT("STAT"));
 
 	// [Setting Root]
 	// 컴포넌트의  부모 컴포넌트를 설정해줌. 부모가 그냥 이 객체자체가 아니라 이 객체가 들고있는 컴포넌트로 설정되어야하나봄. 
@@ -56,8 +60,7 @@ AMyCharacter::AMyCharacter()
 		// 우리가 원하는 소켓에 -> Weapon을 붙이기 
 		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
 	}*/
-
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -179,18 +182,31 @@ void AMyCharacter::AttackCheck()
 	float HalfHeight = AttackRadius * 0.5f + AttackRadius;
 	FQuat Rotation = FRotationMatrix::MakeFromZ(Vec).ToQuat();
 	FColor DrawColor;
-	if (bResult) DrawColor = FColor::Green;
-	else DrawColor = FColor::Red;
+	if (bResult) 
+		DrawColor = FColor::Green;
+	else 
+		DrawColor = FColor::Red;
 	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius, Rotation, DrawColor, false, 2.f);
 
 
 	if (bResult && HitResult.GetActor())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit Actor %s"), *HitResult.GetActor()->GetName());
+
+		FDamageEvent DamageEvent;
+		HitResult.GetActor()->TakeDamage(Stat->GetAttack(), DamageEvent, GetController(), this/*내가 얘를 공격하고 있는 거니까 this를 넘겨준다*/);
+			// TakeDamage는 Actor안에 기본적으로 들어가있는 가상함수. 
 	}
 }
 
 void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	IsAttacking = false;
+}
+
+float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+	AController* EventInstigator, AActor* DamageCauser)
+{
+	Stat->OnAttacked(DamageAmount);
+	return DamageAmount;
 }
