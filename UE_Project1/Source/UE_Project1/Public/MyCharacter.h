@@ -53,6 +53,10 @@ private:
 	UPROPERTY()
 	int32 AttackIndex = 0;
 
+	// 소켓에 무기 붙이기 실습 
+	UPROPERTY(VisibleAnywhere, Category = "Pawn")
+	UStaticMeshComponent* Weapon;
+
 public:
 	// bind axis function
 	void UpDown(float Value);

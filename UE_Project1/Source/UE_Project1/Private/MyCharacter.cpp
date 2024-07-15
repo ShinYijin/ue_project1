@@ -10,6 +10,7 @@
 #include "Components/CapsuleComponent.h"// GetCapsuleComponent()를 사용하기 위함. 
 										// 이걸 안쓰면 아마 CapsuleComponent라는 타입을 잘 몰라서 자동 형변환이 안되는 듯. 그래서 SpringArm->SetupAttachment(GetCapsuleComponent()); 에서 오류남. 
 #include "MyAnimInstance.h"
+#include "MyWeapon.h"
 
 #include "DrawDebugHelpers.h" // 디버깅하기 편하게 도와주는 라이브러리 
 
@@ -41,12 +42,38 @@ AMyCharacter::AMyCharacter()
 
 	// [Mesh local transform setting]
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
+
+	// 소켓에 무기 붙이기(무기를 따로 엑터 클래스로 관리하지 않는 경우) 
+	/*FName WeaponSocket(TEXT("hand_l_socket")); // 소켓 이름 변수 
+	if (GetMesh()->DoesSocketExist(WeaponSocket)) // 소켓이 있는지 확인 
+	{
+		Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WEAPON"));
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> SW(TEXT("/Script/Engine.StaticMesh'/Game/ParagonGreystone/FX/Meshes/Heroes/Greystone/SM_Greystone_Blade_01.SM_Greystone_Blade_01'"));
+		if (SW.Succeeded())
+		{
+			Weapon->SetStaticMesh(SW.Object);
+		}
+		// 우리가 원하는 소켓에 -> Weapon을 붙이기 
+		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
+	}*/
+
+
 }
 
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
-	Super::BeginPlay();	
+	Super::BeginPlay();
+
+	// 엑터 클래스로 관리되는 무기를 스폰해서 장착하는 경우 
+	FName WeaponSocket(TEXT("hand_l_socket"));
+	auto CurrentWeapon = GetWorld()->SpawnActor<AMyWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+	if (CurrentWeapon)
+	{	// 소켓에 엑터 붙이기 
+		CurrentWeapon->AttachToComponent(GetMesh(),
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+			WeaponSocket);
+	}
 }
 
 void AMyCharacter::PostInitializeComponents()
