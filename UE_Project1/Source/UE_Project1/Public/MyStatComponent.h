@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "MyStatComponent.generated.h"
 
+// TODO
+DECLARE_MULTICAST_DELEGATE(FOnHpCHanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_PROJECT1_API UMyStatComponent : public UActorComponent
@@ -22,11 +24,14 @@ protected:
 
 public:
 	void SetLevel(int32 NewLevel);
+	void SetHp(int32 NewHp);
 	void OnAttacked(float DamageAmount);
 
 	int32 GetLevel() { return Level; }
 	int32 GetHp() { return Hp; }
-	int32 GetAttack() { return Attack; }
+	int32 GetMaxHp() { return MaxHp; }
+	float GetHpRatio() { return Hp / (float)MaxHp; }
+	int32 GetAttack() { return Attack;}
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Stat", Meta = (AllowPrivateAccess = true));
@@ -34,5 +39,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Stat", Meta = (AllowPrivateAccess = true));
 	int32 Hp;
 	UPROPERTY(EditAnywhere, Category = "Stat", Meta = (AllowPrivateAccess = true));
+	int32 MaxHp;
+	UPROPERTY(EditAnywhere, Category = "Stat", Meta = (AllowPrivateAccess = true));
 	int32 Attack;
+
+public:
+	FOnHpCHanged OnHpChange;
 };

@@ -9,11 +9,13 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"// GetCapsuleComponent()를 사용하기 위함. 
 										// 이걸 안쓰면 아마 CapsuleComponent라는 타입을 잘 몰라서 자동 형변환이 안되는 듯. 그래서 SpringArm->SetupAttachment(GetCapsuleComponent()); 에서 오류남. 
+#include "Components/WidgetComponent.h"
 #include "Engine/DamageEvents.h"
 
 #include "MyAnimInstance.h"
 #include "MyWeapon.h"
 #include "MyStatComponent.h"
+#include "MyUserWidget.h"
 
 #include "DrawDebugHelpers.h" // 디버깅하기 편하게 도와주는 라이브러리 
 
@@ -34,11 +36,13 @@ AMyCharacter::AMyCharacter()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	Stat = CreateDefaultSubobject<UMyStatComponent>(TEXT("STAT"));
+	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
 
 	// [Setting Root]
 	// 컴포넌트의  부모 컴포넌트를 설정해줌. 부모가 그냥 이 객체자체가 아니라 이 객체가 들고있는 컴포넌트로 설정되어야하나봄. 
 	SpringArm->SetupAttachment(GetCapsuleComponent()); 
 	Camera->SetupAttachment(SpringArm);
+	HpBar->SetupAttachment(GetMesh());
 
 	// [Setting Spring Arm]
 	SpringArm->TargetArmLength = 500.f; // 셀카봉의 길이 
@@ -60,7 +64,16 @@ AMyCharacter::AMyCharacter()
 		// 우리가 원하는 소켓에 -> Weapon을 붙이기 
 		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
 	}*/
-	
+
+	// [Setting User Widget Component]
+	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
+	HpBar->SetWidgetSpace(EWidgetSpace::Screen); //screen은 절대로 잘리지 않고 항상 보이는것. world는 반대. 
+	static ConstructorHelpers::FClassFinder<UUserWidget> UM(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/WBP_Hpbar.WBP_Hpbar_C'"));
+	if(UM.Succeeded())
+	{
+		HpBar->SetWidgetClass(UM.Class);
+		HpBar->SetDrawSize(FVector2D(200.f, 10.f));
+	}
 }
 
 // Called when the game starts or when spawned
@@ -91,6 +104,14 @@ void AMyCharacter::PostInitializeComponents()
 		// 충돌 관련 delegate 붙이기 
 		AnimInstance->OnAttackHit.AddUObject(this, &AMyCharacter::AttackCheck);
 	}
+
+	HpBar->InitWidget();	// 위젯 초기화. 이걸 안해주면 문제가 생기는 버전도 있음. 확실히 하기 위해 그냥 쓰기. 	
+	auto HpWidget = Cast<UMyUserWidget>(HpBar->GetUserWidgetObject());
+	if (HpWidget)
+	{
+		HpWidget->BindHp(Stat);
+	}
+
 }
 
 // Called every frame

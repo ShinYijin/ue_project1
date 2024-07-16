@@ -45,16 +45,27 @@ void UMyStatComponent::SetLevel(int32 NewLevel)
 		if (StatData)
 		{
 			NewLevel = StatData->Level;
-			Hp = StatData->MaxHP;
+			SetHp(Hp = StatData->MaxHP);
+			MaxHp = StatData->MaxHP;
 			Attack = StatData->Attack;
 		}
 	}
 }
 
+void UMyStatComponent::SetHp(int32 NewHp)
+{
+	Hp += NewHp;
+	if (Hp < 0) Hp = 0;
+
+	// HpBar UI연동이 필요함->델리게이트로 처리할 것이다. 구독하고 있던 모든 객체에게 신호가 가도록 
+	OnHpChange.Broadcast();
+
+
+}
+
 void UMyStatComponent::OnAttacked(float DamageAmount)
 {
-	Hp -= DamageAmount;
-	if (Hp < 0) Hp = 0;
+	SetHp(Hp - DamageAmount);
 
 	UE_LOG(LogTemp, Warning, TEXT("OnAttacked %d"), Hp);
 

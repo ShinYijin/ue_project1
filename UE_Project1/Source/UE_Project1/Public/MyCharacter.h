@@ -48,6 +48,10 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UMyStatComponent* Stat;
 
+	// HPBar
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* HpBar;
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn")
 	bool IsAttacking = false;
