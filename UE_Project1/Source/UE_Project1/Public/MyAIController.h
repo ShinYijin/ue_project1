@@ -25,4 +25,11 @@ private:
 
 private:
 	FTimerHandle TimerHandle;
+
+private:
+	// Behavior tree
+	UPROPERTY(VisibleAnywhere)
+	class UBehaviorTree* BehaviorTree;
+	UPROPERTY(VisibleAnywhere)
+	class UBlackboardData* BlackboardData;
 };
