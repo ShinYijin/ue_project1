@@ -228,6 +228,8 @@ void AMyCharacter::AttackCheck()
 void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	IsAttacking = false;
+
+	OnAttackEnd.Broadcast(); // 구독자들에게 공격 모션이 끝났음을 알림 
 }
 
 float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,

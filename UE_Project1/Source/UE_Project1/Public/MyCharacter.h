@@ -7,6 +7,9 @@
 #include "MyCharacter.generated.h"
 
 
+
+DECLARE_MULTICAST_DELEGATE(FOnAttackEnd) // Attack이 종료됨을 Task쪽에서 알아야 될 필요가 있어서 만듬. (BTTask_Attack참고)
+
 UCLASS()
 class UE_PROJECT1_API AMyCharacter : public ACharacter
 {
@@ -75,6 +78,9 @@ public:
 
 	// bind delegate function (for collition)
 	void AttackCheck();
+
+	//  delegate
+	FOnAttackEnd OnAttackEnd;
 
 	// delegate functions
 	UFUNCTION()
