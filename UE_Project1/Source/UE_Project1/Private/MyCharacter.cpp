@@ -16,6 +16,7 @@
 #include "MyWeapon.h"
 #include "MyStatComponent.h"
 #include "MyUserWidget.h"
+#include "MyAIController.h"
 
 #include "DrawDebugHelpers.h" // 디버깅하기 편하게 도와주는 라이브러리 
 
@@ -74,6 +75,10 @@ AMyCharacter::AMyCharacter()
 		HpBar->SetWidgetClass(UM.Class);
 		HpBar->SetDrawSize(FVector2D(200.f, 10.f));
 	}
+
+	// [Setting AI Controller class]
+	AIControllerClass = AMyAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned

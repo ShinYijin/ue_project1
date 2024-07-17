@@ -52,6 +52,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
 
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn")
 	bool IsAttacking = false;
